@@ -1,0 +1,213 @@
+{% extends 'base.html' %}
+
+{% block title %}Visualisasi Time Complexity{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+            <h2 class="text-2xl font-bold text-gray-900">Benchmark Algoritma</h2>
+            <p class="mt-1 text-sm text-gray-600">Visualisasi perbandingan kecepatan sorting (Time Complexity).</p>
+        </div>
+        
+        <button onclick="runBenchmark()" id="btnRun" 
+                class="group relative inline-block rounded-full bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-600 p-[2px] focus:outline-none focus:ring active:text-opacity-75 shadow-md">
+            
+            <span class="flex items-center gap-2 rounded-full bg-transparent px-6 py-2.5 text-xs font-bold text-white transition-all group-hover:bg-white group-hover:text-blue-600">
+                <i class="ph ph-play-circle text-lg"></i> 
+                MULAI TEST
+            </span>
+            
+        </button>
+    </div>
+
+    <div class="relative rounded-2xl bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-600 p-[2px] shadow-lg">
+        <div class="relative h-[450px] w-full overflow-hidden rounded-2xl bg-white p-4 sm:p-6">
+            
+            <div id="loading" class="hidden absolute inset-0 z-20 flex flex-col items-center justify-center bg-white/80 backdrop-blur-sm transition-all">
+                <div class="relative">
+                    <div class="h-16 w-16 rounded-full border-4 border-blue-100 border-t-blue-600 animate-spin"></div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-blue-600">
+                        <i class="ph ph-timer text-xl"></i>
+                    </div>
+                </div>
+                <h3 class="mt-4 text-lg font-bold text-gray-800">Sedang Menghitung...</h3>
+                <p class="text-sm text-gray-500 animate-pulse">Melakukan Stress Test pada Algoritma</p>
+            </div>
+            
+            <canvas id="timeChart"></canvas>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <div class="flex items-start gap-4 rounded-2xl border border-red-100 bg-red-50/50 p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-red-100 text-red-600">
+                <i class="ph ph-warning-circle text-2xl"></i>
+            </div>
+            <div>
+                <h4 class="text-lg font-bold text-gray-900">O(n²) - Lambat</h4>
+                <p class="mt-1 text-sm text-gray-600 leading-relaxed">
+                    Algoritma seperti <span class="font-bold text-red-600">Bubble, Selection, & Insertion</span> sangat lambat saat data bertambah banyak. Grafik akan menanjak tajam ke atas.
+                </p>
+            </div>
+        </div>
+
+        <div class="flex items-start gap-4 rounded-2xl border border-emerald-100 bg-emerald-50/50 p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+                <i class="ph ph-lightning text-2xl"></i>
+            </div>
+            <div>
+                <h4 class="text-lg font-bold text-gray-900">O(n log n) - Cepat</h4>
+                <p class="mt-1 text-sm text-gray-600 leading-relaxed">
+                    Algoritma <span class="font-bold text-emerald-600">Merge & Shell Sort</span> jauh lebih efisien. Grafik akan tetap landai (rendah) meskipun jumlah data ribuan.
+                </p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    let myChart = null;
+
+    async function runBenchmark() {
+        const btn = document.getElementById('btnRun');
+        const loading = document.getElementById('loading');
+        
+        // UI Loading State
+        btn.disabled = true;
+        btn.classList.add('opacity-50', 'cursor-not-allowed', 'grayscale');
+        loading.classList.remove('hidden');
+
+        try {
+            // Panggil Backend
+            const response = await fetch('/run-benchmark');
+            if (!response.ok) throw new Error("Server Error");
+            
+            const data = await response.json();
+
+            // Render Chart
+            renderChart(data);
+        } catch (error) {
+            alert('Gagal menjalankan benchmark! Pastikan server berjalan.');
+            console.error(error);
+        } finally {
+            // Reset UI
+            btn.disabled = false;
+            btn.classList.remove('opacity-50', 'cursor-not-allowed', 'grayscale');
+            loading.classList.add('hidden');
+        }
+    }
+
+    function renderChart(data) {
+        const ctx = document.getElementById('timeChart').getContext('2d');
+
+        // Hapus chart lama jika ada
+        if (myChart) myChart.destroy();
+
+        // Konfigurasi Chart agar Responsive & Cantik
+        myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: data.labels.map(n => n + ' Data'),
+                datasets: [
+                    {
+                        label: 'Bubble Sort',
+                        data: data.bubble,
+                        borderColor: '#EF4444', // Red 500
+                        backgroundColor: '#EF4444',
+                        tension: 0.4,
+                        borderWidth: 2,
+                        pointRadius: 3
+                    },
+                    {
+                        label: 'Selection Sort',
+                        data: data.selection,
+                        borderColor: '#F59E0B', // Amber 500
+                        backgroundColor: '#F59E0B',
+                        tension: 0.4,
+                        borderWidth: 2,
+                        pointRadius: 3
+                    },
+                    {
+                        label: 'Insertion Sort',
+                        data: data.insertion,
+                        borderColor: '#F97316', // Orange 500
+                        backgroundColor: '#F97316',
+                        tension: 0.4,
+                        borderWidth: 2,
+                        pointRadius: 3
+                    },
+                    {
+                        label: 'Shell Sort',
+                        data: data.shell,
+                        borderColor: '#3B82F6', // Blue 500
+                        backgroundColor: '#3B82F6',
+                        tension: 0.4,
+                        borderWidth: 3,
+                        pointRadius: 4
+                    },
+                    {
+                        label: 'Merge Sort 🚀',
+                        data: data.merge,
+                        borderColor: '#10B981', // Emerald 500
+                        backgroundColor: '#10B981',
+                        borderWidth: 4, // Lebih tebal karena juara
+                        tension: 0.4,
+                        pointRadius: 5,
+                        pointBackgroundColor: '#ffffff',
+                        pointBorderWidth: 2
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false, // Wajib false agar ngikutin tinggi container div
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 20,
+                            font: { family: "'Inter', sans-serif", size: 12 }
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Waktu Eksekusi (Semakin rendah = Semakin Cepat)',
+                        padding: { bottom: 20 },
+                        font: { size: 14, weight: 'normal' }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                        titleColor: '#111827',
+                        bodyColor: '#374151',
+                        borderColor: '#E5E7EB',
+                        borderWidth: 1,
+                        padding: 10,
+                        boxPadding: 4
+                    }
+                },
+                scales: {
+                    y: {
+                        title: { display: true, text: 'Waktu (Milidetik)' },
+                        beginAtZero: true,
+                        grid: { color: '#F3F4F6' }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+    }
+</script>
+{% endblock %}

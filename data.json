@@ -1,0 +1,226 @@
+[
+    {
+        "id": 1,
+        "nim": "241011400029",
+        "nama": "Usep Saeful Adzkia",
+        "jurusan": "Teknik Informatika",
+        "email": "usep@gmail.com",
+        "ipk": "3.63"
+    },
+    {
+        "id": 2,
+        "nim": "241011400045",
+        "nama": "Rangga Waridat",
+        "jurusan": "Teknik Informatika",
+        "email": "rangga@gmail.com",
+        "ipk": "3.28"
+    },
+    {
+        "id": 3,
+        "nim": "241011401047",
+        "nama": "Agustina Febriyanti",
+        "jurusan": "Teknik Informatika",
+        "email": "agustina@gmail.com",
+        "ipk": "3.41"
+    },
+    {
+        "id": 4,
+        "nim": "241011402411",
+        "nama": "Muhamad Reinaldi Putra Ramadhani",
+        "jurusan": "Teknik Informatika",
+        "email": "reinaldi@gmail.com",
+        "ipk": "3.36"
+    },
+    {
+        "id": 5,
+        "nim": "241011400188",
+        "nama": "Fandy Azkan Nufus",
+        "jurusan": "Teknik Informatika",
+        "email": "fandy@gmail.com",
+        "ipk": "3.32"
+    },
+    {
+        "id": 6,
+        "nim": "241011400312",
+        "nama": "Ferdy Adhi Wijaya",
+        "jurusan": "Teknik Informatika",
+        "email": "ferdy@gmail.com",
+        "ipk": "3.44"
+    },
+    {
+        "id": 7,
+        "nim": "241011400254",
+        "nama": "Kesit Adi Prasetyo",
+        "jurusan": "Teknik Informatika",
+        "email": "kesit@gmail.com",
+        "ipk": "3.27"
+    },
+    {
+        "id": 8,
+        "nim": "241011402636",
+        "nama": "Aprizal Dwi Lutfiansah",
+        "jurusan": "Teknik Informatika",
+        "email": "aprizal@gmail.com",
+        "ipk": "3.39"
+    },
+    {
+        "id": 9,
+        "nim": "241011400577",
+        "nama": "Muhammad Gilang Wicaksana",
+        "jurusan": "Teknik Informatika",
+        "email": "gilang@gmail.com",
+        "ipk": "3.47"
+    },
+    {
+        "id": 10,
+        "nim": "241011401903",
+        "nama": "Ade Novfa Fikriansyah",
+        "jurusan": "Teknik Informatika",
+        "email": "ade@gmail.com",
+        "ipk": "3.34"
+    },
+    {
+        "id": 11,
+        "nim": "241011402195",
+        "nama": "Athallah Dwipa Arya",
+        "jurusan": "Teknik Informatika",
+        "email": "athallah@gmail.com",
+        "ipk": "3.31"
+    },
+    {
+        "id": 12,
+        "nim": "241011401710",
+        "nama": "Muhammad Faiz Arrahman",
+        "jurusan": "Teknik Informatika",
+        "email": "faiz@gmail.com",
+        "ipk": "3.43"
+    },
+    {
+        "id": 13,
+        "nim": "241011400057",
+        "nama": "Pundhut Bagas Wazidan",
+        "jurusan": "Teknik Informatika",
+        "email": "pundhut@gmail.com",
+        "ipk": "3.29"
+    },
+    {
+        "id": 14,
+        "nim": "241011400020",
+        "nama": "Gulfia Aufa Rafiki",
+        "jurusan": "Teknik Informatika",
+        "email": "gulfia@gmail.com",
+        "ipk": "3.48"
+    },
+    {
+        "id": 15,
+        "nim": "241011400016",
+        "nama": "Arifin Hamdani",
+        "jurusan": "Teknik Informatika",
+        "email": "arifin@gmail.com",
+        "ipk": "3.26"
+    },
+    {
+        "id": 16,
+        "nim": "241011402109",
+        "nama": "Alifian Naufal Athallah",
+        "jurusan": "Teknik Informatika",
+        "email": "alifian@gmail.com",
+        "ipk": "3.40"
+    },
+    {
+        "id": 17,
+        "nim": "241011403323",
+        "nama": "Rosaliya",
+        "jurusan": "Teknik Informatika",
+        "email": "rosaliya@gmail.com",
+        "ipk": "3.38"
+    },
+    {
+        "id": 18,
+        "nim": "241011400044",
+        "nama": "Muhammad Al Parizi",
+        "jurusan": "Teknik Informatika",
+        "email": "parizi@gmail.com",
+        "ipk": "3.35"
+    },
+    {
+        "id": 19,
+        "nim": "241011402012",
+        "nama": "Adriandani Ibrahim Anggayuda Ramli",
+        "jurusan": "Teknik Informatika",
+        "email": "adriandani@gmail.com",
+        "ipk": "3.30"
+    },
+    {
+        "id": 20,
+        "nim": "241011400049",
+        "nama": "Khaisan Ramzi Muzhaffar",
+        "jurusan": "Teknik Informatika",
+        "email": "khaisan@gmail.com",
+        "ipk": "3.42"
+    },
+    {
+        "id": 21,
+        "nim": "241011400021",
+        "nama": "Evan Hardyansah",
+        "jurusan": "Teknik Informatika",
+        "email": "evan@gmail.com",
+        "ipk": "3.25"
+    },
+    {
+        "id": 22,
+        "nim": "241011400025",
+        "nama": "Ardiansyah",
+        "jurusan": "Teknik Informatika",
+        "email": "ardiansyah@gmail.com",
+        "ipk": "3.37"
+    },
+    {
+        "id": 23,
+        "nim": "241011400053",
+        "nama": "Vickry Dwi Prasetyanto",
+        "jurusan": "Teknik Informatika",
+        "email": "vickry@gmail.com",
+        "ipk": "3.46"
+    },
+    {
+        "id": 24,
+        "nim": "241011403038",
+        "nama": "Muhamad Ariono Putra Agusni",
+        "jurusan": "Teknik Informatika",
+        "email": "ariono@gmail.com",
+        "ipk": "3.33"
+    },
+    {
+        "id": 25,
+        "nim": "241011401759",
+        "nama": "Muhammad Faiz Alfatah",
+        "jurusan": "Teknik Informatika",
+        "email": "alfatah@gmail.com",
+        "ipk": "3.49"
+    },
+    {
+        "id": 26,
+        "nim": "241011400024",
+        "nama": "Andini Kemuning Prameswari",
+        "jurusan": "Teknik Informatika",
+        "email": "andini@gmail.com",
+        "ipk": "3.45"
+    },
+    {
+        "id": 27,
+        "nim": "241011400036",
+        "nama": "Vebrian Valentino Da Silva",
+        "jurusan": "Teknik Informatika",
+        "email": "vebrian@gmail.com",
+        "ipk": "3.50"
+    },
+    {
+        "id": 28,
+        "nim": "241011400004",
+        "nama": "Achmad Refaldi Peto",
+        "jurusan": "Teknik Informatika",
+        "email": "achmad@gmail.com",
+        "ipk": "3.24"
+    }
+]

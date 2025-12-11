@@ -1,0 +1,307 @@
+{% extends 'base.html' %}
+
+{% block title %}Manajemen Data Mahasiswa{% endblock %} 
+
+{% block content %}
+<script>
+    function toggleModal(modalID) {
+        var modal = document.getElementById(modalID);
+        if (modal) {
+            modal.classList.toggle("hidden");
+            modal.classList.toggle("flex");
+        }
+    }
+</script>
+
+<div class="space-y-8">
+    
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+            <h2 class="text-2xl font-bold text-gray-900">Data Mahasiswa</h2>
+            <p class="mt-1 text-sm text-gray-600">Kelola data, nilai (IPK), dan laporan akademik.</p>
+        </div>
+        
+        <div class="flex gap-3">
+            <a href="/cetak-pdf" 
+               class="group relative inline-block rounded-full bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-600 p-[2px] focus:outline-none focus:ring active:text-opacity-75 shadow-md">
+                <span class="flex items-center gap-2 rounded-full bg-transparent px-5 py-2.5 text-xs font-bold text-white transition-all group-hover:bg-white group-hover:text-blue-600">
+                    <i class="ph ph-printer text-lg"></i> 
+                    CETAK PDF
+                </span>
+            </a>
+            
+            <button type="button" onclick="toggleModal('modalTambah')" 
+                    class="group relative inline-block rounded-full bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-600 p-[2px] focus:outline-none focus:ring active:text-opacity-75 shadow-md">
+                <span class="flex items-center gap-2 rounded-full bg-white px-6 py-2.5 text-xs font-bold text-blue-600 transition-all group-hover:bg-transparent group-hover:text-white">
+                    <span class="text-lg font-extrabold">+</span> 
+                    TAMBAH DATA
+                </span>
+            </button>
+        </div>
+    </div>
+
+    <form action="/mahasiswa" method="GET" class="space-y-4">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <div class="relative rounded-2xl bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-600 p-[2px] shadow-sm">
+                <div class="h-full rounded-2xl bg-white p-6">
+                    
+                    <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
+                        <span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-600">
+                            <i class="ph ph-magnifying-glass text-lg"></i>
+                        </span>
+                        Pencarian Data
+                    </h3>
+
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        
+                        <div class="w-full sm:w-1/3">
+                            <label class="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Metode</label>
+                            <div class="relative">
+                                <div class="group rounded-lg bg-gray-300 p-[2px] transition-all duration-300 focus-within:bg-gradient-to-r focus-within:from-sky-400 focus-within:via-blue-500 focus-within:to-indigo-600 focus-within:shadow-md">
+                                    <select name="algo" class="w-full cursor-pointer appearance-none rounded-[6px] border-none bg-white py-2 pl-3 pr-10 text-sm text-gray-700 focus:outline-none focus:ring-0">
+                                        <option value="linear" {% if algo == 'linear' %}selected{% endif %}>Linear Search</option>
+                                        <option value="binary" {% if algo == 'binary' %}selected{% endif %}>Binary Search</option>
+                                        <option value="sequential" {% if algo == 'sequential' %}selected{% endif %}>Sequential Search</option>
+                                    </select>
+                                </div>
+                                <div class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 transition-colors group-focus-within:text-blue-600">
+                                    <i class="ph ph-caret-down text-base"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex-1">
+                            <label class="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Kata Kunci</label>
+                            <div class="group relative rounded-lg bg-gray-300 p-[2px] transition-all duration-300 focus-within:bg-gradient-to-r focus-within:from-sky-400 focus-within:via-blue-500 focus-within:to-indigo-600 focus-within:shadow-md">
+                                <input type="text" name="q" value="{{ query if query else '' }}" placeholder="Ketik Nama / NIM..." 
+                                       class="w-full rounded-[6px] border-none bg-white py-2 px-3 text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-0">
+                            </div>
+                        </div>
+
+                        <div class="flex items-end">
+                            <button type="submit" class="group relative inline-block rounded-lg bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-600 p-[2px] shadow-md focus:outline-none focus:ring active:text-opacity-75">
+                                <span class="flex items-center justify-center gap-2 rounded-lg bg-transparent px-6 py-2 text-xs font-bold text-white transition-all group-hover:bg-white group-hover:text-blue-600">
+                                    Cari
+                                </span>
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="relative rounded-2xl bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-600 p-[2px] shadow-sm">
+                <div class="h-full rounded-2xl bg-white p-6">
+                    
+                    <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
+                        <span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-600">
+                            <i class="ph ph-sort-ascending text-lg"></i>
+                        </span>
+                        Pengurutan Data
+                    </h3>
+
+                    <div class="space-y-4">
+                        <div class="flex gap-4">
+                            
+                            <div class="w-1/2">
+                                <label class="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Urutkan</label>
+                                <div class="relative">
+                                    <div class="group rounded-lg bg-gray-300 p-[2px] transition-all duration-300 focus-within:bg-gradient-to-r focus-within:from-sky-400 focus-within:via-blue-500 focus-within:to-indigo-600 focus-within:shadow-md">
+                                        <select name="sort_by" class="w-full cursor-pointer appearance-none rounded-[6px] border-none bg-white py-2 pl-3 pr-10 text-sm text-gray-700 focus:outline-none focus:ring-0">
+                                            <option value="ipk" {% if sort_by == 'ipk' %}selected{% endif %}>Nilai IPK</option>
+                                            <option value="nama" {% if sort_by == 'nama' %}selected{% endif %}>Nama (A-Z)</option>
+                                            <option value="nim" {% if sort_by == 'nim' %}selected{% endif %}>NIM</option>
+                                        </select>
+                                    </div>
+                                    <div class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 transition-colors group-focus-within:text-blue-600">
+                                        <i class="ph ph-caret-down text-base"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="w-1/2">
+                                <label class="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Algoritma</label>
+                                <div class="relative">
+                                    <div class="group rounded-lg bg-gray-300 p-[2px] transition-all duration-300 focus-within:bg-gradient-to-r focus-within:from-sky-400 focus-within:via-blue-500 focus-within:to-indigo-600 focus-within:shadow-md">
+                                        <select name="sort_algo" class="w-full cursor-pointer appearance-none rounded-[6px] border-none bg-white py-2 pl-3 pr-10 text-sm text-gray-700 focus:outline-none focus:ring-0">
+                                            <option value="">-- Default --</option>
+                                            <option value="bubble" {% if sort_algo == 'bubble' %}selected{% endif %}>Bubble Sort</option>
+                                            <option value="selection" {% if sort_algo == 'selection' %}selected{% endif %}>Selection Sort</option>
+                                            <option value="insertion" {% if sort_algo == 'insertion' %}selected{% endif %}>Insertion Sort</option>
+                                            <option value="merge" {% if sort_algo == 'merge' %}selected{% endif %}>Merge Sort</option>
+                                            <option value="shell" {% if sort_algo == 'shell' %}selected{% endif %}>Shell Sort</option>
+                                        </select>
+                                    </div>
+                                    <div class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 transition-colors group-focus-within:text-blue-600">
+                                        <i class="ph ph-caret-down text-base"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end">
+                            <button type="submit" class="group relative w-full sm:w-auto inline-block rounded-lg bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-600 p-[2px] shadow-md focus:outline-none focus:ring active:text-opacity-75">
+                                <span class="flex items-center justify-center gap-2 rounded-lg bg-transparent px-4 py-2 text-xs font-bold text-white transition-all group-hover:bg-white group-hover:text-blue-600">
+                                    <i class="ph ph-check-circle text-base"></i> Terapkan Sort
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </form>
+    
+    {% if pesan %}
+    <div class="mt-6 bg-blue-50 border-l-4 border-blue-500 p-4 text-blue-700 text-sm rounded-r-lg shadow-sm flex items-center gap-3 animate-pulse-slow">
+        <i class="ph ph-info text-xl"></i>
+        <div class="flex-1">
+            <strong>Info Filter:</strong> {{ pesan }}
+        </div>
+        {% if query or sort_algo %}
+        <a href="/mahasiswa" class="whitespace-nowrap rounded-md bg-white border border-blue-200 px-3 py-1.5 text-xs font-bold text-blue-600 hover:bg-blue-100 transition shadow-sm">
+            RESET FILTER
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <div class="relative rounded-2xl bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-600 p-[2px] shadow-lg">
+        <div class="overflow-hidden rounded-2xl bg-white">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-100">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-500">NIM</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-500">Nama Lengkap</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-500">Jurusan</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-500">IPK</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-500">Email</th>
+                            <th class="px-6 py-4 text-right text-xs font-bold uppercase tracking-wider text-gray-500">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 bg-white">
+                        {% for mhs in mahasiswa %}
+                        <tr class="group transition-colors hover:bg-blue-50/50">
+                            <td class="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900 font-mono">{{ mhs.nim }}</td>
+                            <td class="whitespace-nowrap px-6 py-4 text-sm font-semibold text-gray-700">
+                                <div class="flex items-center gap-3">
+                                    <div class="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-100 text-xs font-bold text-indigo-600">
+                                        {{ mhs.nama[0] | upper }}
+                                    </div>
+                                    {{ mhs.nama }}
+                                </div>
+                            </td>
+                            <td class="whitespace-nowrap px-6 py-4">
+                                <span class="inline-flex items-center gap-1 rounded-full bg-sky-50 px-2.5 py-1 text-xs font-semibold text-sky-600 border border-sky-100">
+                                    {{ mhs.jurusan }}
+                                </span>
+                            </td>
+                            <td class="whitespace-nowrap px-6 py-4 text-sm">
+                                {% if mhs.ipk|float >= 3.50 %}
+                                    <span class="font-bold text-emerald-600 flex items-center gap-1">
+                                        {{ mhs.ipk }} <i class="ph-fill ph-star text-yellow-400 text-xs"></i>
+                                    </span>
+                                {% else %}
+                                    <span class="font-bold text-gray-600">{{ mhs.ipk }}</span>
+                                {% endif %}
+                            </td>
+                            <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500">{{ mhs.email }}</td>
+                            <td class="whitespace-nowrap px-6 py-4 text-right">
+                                <div class="flex justify-end gap-2">
+                                    <a href="/edit/{{ mhs.id }}" class="rounded-lg p-2 text-gray-500 hover:bg-yellow-50 hover:text-yellow-600 transition" title="Edit">
+                                        <i class="ph ph-pencil-simple text-lg"></i>
+                                    </a>
+                                    <a href="/hapus/{{ mhs.id }}" onclick="return confirm('Yakin ingin menghapus?')" class="rounded-lg p-2 text-gray-500 hover:bg-red-50 hover:text-red-600 transition" title="Hapus">
+                                        <i class="ph ph-trash text-lg"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="6" class="px-6 py-12 text-center">
+                                <div class="flex flex-col items-center justify-center gap-2">
+                                    <div class="rounded-full bg-gray-100 p-4 text-gray-400">
+                                        <i class="ph ph-magnifying-glass text-3xl"></i>
+                                    </div>
+                                    <p class="text-gray-900 font-medium">Data tidak ditemukan</p>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalTambah" class="fixed inset-0 z-50 hidden h-full w-full bg-gray-900/60 backdrop-blur-sm flex items-center justify-center transition-opacity px-4 py-6">
+    
+    <div class="relative w-full max-w-lg transform rounded-3xl bg-white p-8 shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)] border border-gray-200/50 transition-all scale-100">
+        
+        <button type="button" onclick="toggleModal('modalTambah')" 
+                class="absolute top-5 right-5 flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-gray-400 hover:bg-red-50 hover:text-red-500 transition-colors">
+            <i class="ph ph-x text-lg"></i>
+        </button>
+
+        <div class="mb-8 text-center">
+            <div class="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-blue-50 text-blue-600">
+                <i class="ph ph-student text-3xl"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-800">Mahasiswa Baru</h3>
+            <p class="text-sm text-gray-500">Lengkapi formulir di bawah untuk menambah data.</p>
+        </div>
+        
+        <form action="/tambah" method="POST" class="space-y-5">
+            <div class="group">
+                <label class="mb-1 block text-xs font-bold uppercase tracking-wide text-gray-500 group-focus-within:text-blue-600 transition-colors">NIM</label>
+                <input type="text" name="nim" required placeholder="Contoh: 10123456"
+                       class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-medium text-gray-800 placeholder-gray-400 transition-all focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 outline-none">
+            </div>
+            <div class="group">
+                <label class="mb-1 block text-xs font-bold uppercase tracking-wide text-gray-500 group-focus-within:text-blue-600 transition-colors">Nama Lengkap</label>
+                <input type="text" name="nama" required placeholder="Nama sesuai KTM"
+                       class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-medium text-gray-800 placeholder-gray-400 transition-all focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 outline-none">
+            </div>
+            <div class="grid grid-cols-2 gap-5">
+                <div class="group">
+                    <label class="mb-1 block text-xs font-bold uppercase tracking-wide text-gray-500 group-focus-within:text-blue-600 transition-colors">IPK</label>
+                    <input type="number" step="0.01" max="4.00" name="ipk" required placeholder="0.00"
+                           class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-medium text-gray-800 placeholder-gray-400 transition-all focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 outline-none">
+                </div>
+                <div class="group relative">
+                    <label class="mb-1 block text-xs font-bold uppercase tracking-wide text-gray-500 group-focus-within:text-blue-600 transition-colors">Jurusan</label>
+                    <div class="relative">
+                        <select name="jurusan" class="w-full appearance-none rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-medium text-gray-800 transition-all focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 outline-none cursor-pointer">
+                            <option>Teknik Informatika</option>
+                            <option>Sistem Informasi</option>
+                            <option>Ilmu Komunikasi</option>
+                            <option>Desain Grafis</option>
+                        </select>
+                        <div class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">
+                            <i class="ph ph-caret-down font-bold"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="group">
+                <label class="mb-1 block text-xs font-bold uppercase tracking-wide text-gray-500 group-focus-within:text-blue-600 transition-colors">Email Kampus</label>
+                <input type="email" name="email" placeholder="nama@kampus.ac.id"
+                       class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-medium text-gray-800 placeholder-gray-400 transition-all focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 outline-none">
+            </div>
+            <div class="pt-2">
+                <button type="submit" 
+                        class="w-full rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 py-3.5 text-sm font-bold text-white shadow-lg shadow-blue-500/30 transition-all hover:scale-[1.02] hover:shadow-blue-500/50 active:scale-[0.98]">
+                    SIMPAN DATA
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

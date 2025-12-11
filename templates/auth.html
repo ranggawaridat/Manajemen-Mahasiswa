@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masuk / Daftar - Kampus App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Montserrat', sans-serif; }
+        
+        /* === LOGIKA ANIMASI DESKTOP (Layar > 768px) === */
+        @media (min-width: 768px) {
+            .container.right-panel-active .sign-in-container {
+                transform: translateX(100%);
+            }
+            .container.right-panel-active .sign-up-container {
+                transform: translateX(100%);
+                opacity: 1;
+                z-index: 5;
+                animation: show 1s; 
+            }
+            .container.right-panel-active .overlay-container {
+                transform: translateX(-100%);
+            }
+            .container.right-panel-active .overlay {
+                transform: translateX(50%);
+            }
+            .container.right-panel-active .overlay-left {
+                transform: translateX(0);
+            }
+            .container.right-panel-active .overlay-right {
+                transform: translateX(20%);
+            }
+            @keyframes show {
+                0%, 49.99% { opacity: 0; z-index: 1; }
+                50%, 100% { opacity: 1; z-index: 5; }
+            }
+        }
+
+        /* === LOGIKA ANIMASI MOBILE (Layar < 768px) === */
+        @media (max-width: 767px) {
+            /* Di HP, kita tidak geser, tapi main Opacity (Muncul/Hilang) */
+            .container.right-panel-active .sign-in-container {
+                transform: none;
+                opacity: 0;
+                pointer-events: none; /* Agar tidak bisa diklik saat hilang */
+            }
+            .container.right-panel-active .sign-up-container {
+                transform: none;
+                opacity: 1;
+                z-index: 5;
+            }
+            /* Form Default (Login) */
+            .sign-in-container {
+                width: 100%;
+                opacity: 1;
+                z-index: 2;
+            }
+            /* Form Default (Register) */
+            .sign-up-container {
+                width: 100%;
+                opacity: 0;
+                z-index: 1;
+            }
+        }
+    </style>
+</head>
+<body class="flex justify-center items-center flex-col h-screen bg-gray-100 p-4">
+
+    <div class="fixed inset-0 -z-10 bg-[url('/static/background.jpg')] bg-cover bg-center bg-no-repeat blur-sm brightness-75"></div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-md px-4">
+            {% for category, message in messages %}
+              <div class="mb-2 p-4 rounded-lg shadow-lg text-white text-center {{ 'bg-red-500' if category == 'error' else 'bg-green-500' }}">
+                {{ message }}
+              </div>
+            {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <div class="container relative overflow-hidden w-full max-w-md md:max-w-full md:w-[768px] min-h-[550px] md:min-h-[480px] bg-white rounded-lg shadow-2xl {{ 'right-panel-active' if active_page == 'register' else '' }}" id="container">
+        
+        <div class="absolute top-0 left-0 h-full w-full md:w-1/2 opacity-0 z-[1] transition-all duration-1000 ease-in-out sign-up-container">
+            <form action="/register" method="POST" class="bg-white flex items-center justify-center flex-col px-8 md:px-12 h-full text-center">
+                <h1 class="font-bold text-2xl md:text-3xl mb-2">Buat Akun</h1>
+                
+                <div class="social-container my-4">
+                    <a href="#" class="border border-gray-300 rounded-full w-10 h-10 inline-flex justify-center items-center mx-1 text-gray-700 hover:bg-gray-100"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="border border-gray-300 rounded-full w-10 h-10 inline-flex justify-center items-center mx-1 text-gray-700 hover:bg-gray-100"><i class="fab fa-google"></i></a>
+                    <a href="#" class="border border-gray-300 rounded-full w-10 h-10 inline-flex justify-center items-center mx-1 text-gray-700 hover:bg-gray-100"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+                <span class="text-xs text-gray-400 mb-4">atau gunakan email untuk registrasi</span>
+                
+                <input type="text" name="username" placeholder="Username" required class="bg-gray-100 border-none p-3 my-2 w-full rounded outline-none focus:ring-2 focus:ring-blue-400" />
+                <input type="password" name="password" placeholder="Password" required class="bg-gray-100 border-none p-3 my-2 w-full rounded outline-none focus:ring-2 focus:ring-blue-400" />
+                
+                <button type="submit" class="mt-4 rounded-full border border-blue-500 bg-blue-500 text-white text-xs font-bold py-3 px-12 uppercase tracking-wide transition-transform active:scale-95 focus:outline-none hover:bg-blue-600">
+                    Daftar
+                </button>
+
+                <p class="md:hidden mt-6 text-sm">
+                    Sudah punya akun? 
+                    <button type="button" id="mobileSignIn" class="text-blue-600 font-bold hover:underline">Masuk</button>
+                </p>
+            </form>
+        </div>
+
+        <div class="absolute top-0 left-0 h-full w-full md:w-1/2 z-[2] transition-all duration-1000 ease-in-out sign-in-container">
+            <form action="/login" method="POST" class="bg-white flex items-center justify-center flex-col px-8 md:px-12 h-full text-center">
+                <h1 class="font-bold text-2xl md:text-3xl mb-2">Masuk</h1>
+                
+                <div class="social-container my-4">
+                    <a href="#" class="border border-gray-300 rounded-full w-10 h-10 inline-flex justify-center items-center mx-1 text-gray-700 hover:bg-gray-100"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="border border-gray-300 rounded-full w-10 h-10 inline-flex justify-center items-center mx-1 text-gray-700 hover:bg-gray-100"><i class="fab fa-google"></i></a>
+                    <a href="#" class="border border-gray-300 rounded-full w-10 h-10 inline-flex justify-center items-center mx-1 text-gray-700 hover:bg-gray-100"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+                <span class="text-xs text-gray-400 mb-4">atau gunakan akun anda</span>
+                
+                <input type="text" name="username" placeholder="Username" required class="bg-gray-100 border-none p-3 my-2 w-full rounded outline-none focus:ring-2 focus:ring-blue-400" />
+                <input type="password" name="password" placeholder="Password" required class="bg-gray-100 border-none p-3 my-2 w-full rounded outline-none focus:ring-2 focus:ring-blue-400" />
+                
+                <a href="#" class="text-gray-800 text-sm no-underline my-4 hover:underline">Lupa Password?</a>
+                
+                <button type="submit" class="rounded-full border border-blue-500 bg-blue-500 text-white text-xs font-bold py-3 px-12 uppercase tracking-wide transition-transform active:scale-95 focus:outline-none hover:bg-blue-600">
+                    Masuk
+                </button>
+
+                <p class="md:hidden mt-6 text-sm">
+                    Belum punya akun? 
+                    <button type="button" id="mobileSignUp" class="text-blue-600 font-bold hover:underline">Daftar</button>
+                </p>
+            </form>
+        </div>
+
+        <div class="hidden md:block absolute top-0 left-1/2 w-1/2 h-full overflow-hidden transition-transform duration-1000 ease-in-out z-[100] overlay-container">
+            <div class="bg-gradient-to-r from-blue-400 to-blue-600 text-white relative -left-full h-full w-[200%] transform translate-x-0 transition-transform duration-1000 ease-in-out overlay">
+                
+                <div class="absolute flex items-center justify-center flex-col px-10 text-center top-0 h-full w-1/2 transform -translate-x-[20%] transition-transform duration-1000 ease-in-out overlay-panel overlay-left">
+                    <h1 class="font-bold text-3xl mb-2">Selamat Datang!</h1>
+                    <p class="text-sm font-light leading-5 mb-8">Untuk tetap terhubung dengan kami, silakan login dengan info pribadi anda</p>
+                    <button type="button" class="bg-transparent border border-white text-white rounded-full text-xs font-bold py-3 px-12 uppercase tracking-wide active:scale-95 focus:outline-none" id="signIn">
+                        Masuk
+                    </button>
+                </div>
+
+                <div class="absolute flex items-center justify-center flex-col px-10 text-center top-0 h-full w-1/2 right-0 transform translate-x-0 transition-transform duration-1000 ease-in-out overlay-panel overlay-right">
+                    <h1 class="font-bold text-3xl mb-2">Halo, Sobat!</h1>
+                    <p class="text-sm font-light leading-5 mb-8">Daftarkan diri anda dan mulai perjalanan bersama kami</p>
+                    <button type="button" class="bg-transparent border border-white text-white rounded-full text-xs font-bold py-3 px-12 uppercase tracking-wide active:scale-95 focus:outline-none" id="signUp">
+                        Daftar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const container = document.getElementById('container');
+        
+        // Tombol Desktop
+        const signUpButton = document.getElementById('signUp');
+        const signInButton = document.getElementById('signIn');
+
+        // Tombol Mobile
+        const mobileSignUp = document.getElementById('mobileSignUp');
+        const mobileSignIn = document.getElementById('mobileSignIn');
+
+        // Fungsi Pindah ke Daftar
+        function goToRegister() {
+            container.classList.add("right-panel-active");
+            window.history.pushState({}, '', '/register');
+        }
+
+        // Fungsi Pindah ke Login
+        function goToLogin() {
+            container.classList.remove("right-panel-active");
+            window.history.pushState({}, '', '/login');
+        }
+
+        // Event Listeners (Desktop)
+        if(signUpButton) signUpButton.addEventListener('click', goToRegister);
+        if(signInButton) signInButton.addEventListener('click', goToLogin);
+
+        // Event Listeners (Mobile)
+        if(mobileSignUp) mobileSignUp.addEventListener('click', goToRegister);
+        if(mobileSignIn) mobileSignIn.addEventListener('click', goToLogin);
+    </script>
+</body>
+</html>
