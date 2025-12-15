@@ -1,11 +1,8 @@
-# app.py
 from flask import Flask, render_template, request, redirect, url_for, session, flash, make_response
 from werkzeug.security import generate_password_hash, check_password_hash
 import json
 import time
 import random
-
-# --- IMPORT MODUL KITA SENDIRI ---
 from config import SECRET_KEY, FILES
 from models import MahasiswaModel
 from utils import load_json, save_json, validasi_input, butuh_login, LaporanPDF

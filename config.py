@@ -2,7 +2,7 @@
 import os
 
 # Konfigurasi Aplikasi
-SECRET_KEY = 'rahasia_super_aman_ini_harus_diganti_nanti'
+SECRET_KEY = '123456'
 
 # Lokasi File Database JSON
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
