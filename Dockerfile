@@ -49,4 +49,4 @@ COPY . /app/
 EXPOSE 5000
 
 # Use Gunicorn to serve the Flask app
-CMD ["gunicorn", "-b", "0.0.0.0:5000", "app:app", "--workers", "2"]
+CMD ["gunicorn", "-b", "0.0.0.0:5000", "app:app", "--workers", "1"]
